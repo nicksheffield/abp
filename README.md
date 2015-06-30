@@ -42,7 +42,7 @@ Deletes the `assets/dist/style.css` and `assets/dist/app.min.js` files.
 gulp styles
 ```
 
-Creates the `assets/dist/style.css` file by compiling any stylus files in the `assets/css/` directory.
+Creates the `assets/dist/style.css` file by compiling the `assets/css/style.styl` file.
 
 ---
 
