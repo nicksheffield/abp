@@ -54,7 +54,7 @@ gulp.task('styles', ['clean:styles'], function() {
 
 gulp.task('scripts', ['clean:scripts'], function() {
 	
-	var stream = gulp.src(['app/app.js', 'app/routes.js', 'app/**/*.js'])
+	var stream = gulp.src(['app/app.js', 'app/app.routes.js', 'app/**/*.js'])
 	
 	.pipe(concat('app.min.js'))
 	
