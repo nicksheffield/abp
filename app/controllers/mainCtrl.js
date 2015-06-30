@@ -1,6 +1,6 @@
 angular.module('app.controllers')
 
-.controller('exampleCtrl', ['$scope',
+.controller('mainCtrl', ['$scope',
 	function($scope) {
 		
 	}
