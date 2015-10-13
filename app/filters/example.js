@@ -4,6 +4,6 @@ angular.module('app.filters')
 	return function(input, total){
 
 		
-		return input;
-	};
-});
+		return input
+	}
+})

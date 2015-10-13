@@ -1,22 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-controller="mainCtrl">
 <head>
 	<meta charset="UTF-8">
-	<title>Document</title>
-	<link rel="stylesheet" href="assets/dist/style.css">
-	<script src="bower_components/jquery/dist/jquery.min.js"></script>
-	<script src="bower_components/angular/angular.min.js"></script>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>{{ siteTitle }}</title>
+	<link rel="stylesheet" href="assets/dist/style.min.css">
 </head>
-<body ng-controller="mainCtrl">
+<body>
 	
-	<div ui-view></div>
+	<div ng-view></div>
 	
-	
-	<script src="bower_components/angular-resource/angular-resource.min.js"></script>
-	<script src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
-	<script src="bower_components/angular-sanitize/angular-sanitize.min.js"></script>
-	<script src="bower_components/lodash/lodash.min.js"></script>
-	
+	<script src="assets/dist/libs.min.js"></script>
 	<script src="assets/dist/app.min.js"></script>
 </body>
 </html>

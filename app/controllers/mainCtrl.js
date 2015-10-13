@@ -1,7 +1,5 @@
 angular.module('app.controllers')
 
-.controller('mainCtrl', ['$scope',
-	function($scope) {
-		
-	}
-]);
+.controller('mainCtrl', function($scope) {
+	$scope.siteTitle = 'My Angular Site'
+})

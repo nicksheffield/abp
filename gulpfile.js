@@ -1,112 +1,107 @@
-var gulp          = require('gulp');
-var watch         = require('gulp-watch');
-var concat        = require('gulp-concat');
-var concatCss     = require('gulp-concat-css');
-var uglify        = require('gulp-uglify');
-var uglifycss     = require('gulp-uglifycss');
-var autoprefixer  = require('gulp-autoprefixer');
-var stylus        = require('gulp-stylus');
-var size          = require('gulp-filesize');
-var gutil         = require('gulp-util');
-var es            = require('event-stream');
-var del           = require('del');
-var vinylPaths    = require('vinyl-paths');
+// jshint asi: true
+var gulp          = require('gulp')                         // the main guy
+var clone         = require('gulp-clone')                   // used to fork a stream
+var order         = require('gulp-order')                   // reorder files in stream
+var uglify        = require('gulp-uglify')                  // minify js
+var stylus        = require('gulp-stylus')                  // turn stylus code into css
+var rename        = require('gulp-rename')                  // rename file
+var concat        = require('gulp-concat')                  // merge files together
+var addsrc        = require('gulp-add-src')                 // mid-stream gulp.src()
+var notify        = require('gulp-notify')                  // OS-level notifications
+var plumber       = require('gulp-plumber')                 // handle errors without crashing
+var beautify      = require('gulp-cssbeautify')             // make files human readable
+var annotate      = require('gulp-ng-annotate')             // safely minify angular
+var sourcemap     = require('gulp-sourcemaps')              // write sourcemaps
+var minifycss     = require('gulp-minify-css')              // minify css code
+var combinemq     = require('gulp-combine-media-queries')   // move all media queries to the end
+var autoprefix    = require('gulp-autoprefixer')            // prefix any css with low support
+var templateCache = require('gulp-angular-templatecache')   // cache angular template files
 
+var paths = {
+	stylus: {
+		watch: ['assets/styl/*.styl', 'assets/styl/**/*.styl'],
+		main: 'assets/styl/style.styl'
+	},
+	angular: {
+		files: ['app/*.js', 'app/**/*.js'],
+		watch: ['app/*.js', 'app/**/*.js', 'app/views/*.html'],
+		views: 'app/views/*.html'
+	},
+	libs: [
+		'bower_components/jquery/dist/jquery.min.js',
+		'bower_components/angular/angular.min.js',
+		'bower_components/angular-route/angular-route.min.js',
+		'bower_components/angular-resource/angular-resource.min.js',
+		'bower_components/angular-sanitize/angular-sanitize.min.js',
+		'bower_components/lodash/lodash.min.js'
+	],
+	output: 'assets/dist/'
+}
 
+var plumberOpts = {
+	errorHandler: notify.onError("Error: <%= error.message %>")
+}
 
+var tplCacheOpts = {
+	module: 'app.views'
+}
 
-
-gulp.task('styles', ['clean:styles'], function() {
-
-	// this is to gracefully fail stylus
-	var s = stylus();
-	
-	var sFail = function() {
-		//gutil.log(arguments);
+gulp.task('angular', function() {
+	var stream = gulp.src(paths.angular.views)              // grab all the html views
+		.pipe(plumber(plumberOpts))                         // stop any errors from breaking a watch
+		.pipe(templateCache('views.js', tplCacheOpts))      // make a template cache from them
+		.pipe(addsrc(paths.angular.files))                  // add the rest of the angular app
+		.pipe(order(['app.js']))                            // make sure app.js is first
+		.on('error', function(){})                          // suppress jscs error reporting
+		.pipe(annotate())                                   // make angular callbacks minifyable
+		.pipe(uglify())                                     // minify the code
+		.pipe(concat('app.min.js'))                         // merge them all into the same file
+		.pipe(gulp.dest(paths.output))                      // save it into the dist folder
 		
-		console.log('yo!');
-		s.end();
-	}
-
-	// add more gulp.src()'s as extra parameters to the es.merge() below to include ordinary css files
-	var stream = es.merge(gulp.src('assets/css/style.styl').pipe(s).on('error', sFail))
-
-	.pipe(concatCss('style.css'))
-
-	.pipe(uglifycss())
+	return stream
 	
-	.pipe(autoprefixer({
-		browsers: ['last 2 versions'],
-		cascade: false
-	}))
+})
+
+gulp.task('libs', function() {
+	var stream = gulp.src(paths.libs)                       // grab all the libs
+		.pipe(concat('libs.min.js'))                        // merge them all into the same file
+		.pipe(uglify())                                     // minify the code
+		.pipe(gulp.dest(paths.output))                      // save it into the dist folder
 	
-	.pipe(size())
+	return stream
+})
 
-	.pipe(gulp.dest('assets/dist'));
+gulp.task('css', function(){
+	// prepare css code
+	var stream = gulp.src(paths.stylus.main)                // grab our stylus file
+		.pipe(plumber(plumberOpts))                         // notify us if any errors appear
+		.pipe(sourcemap.init())                             // get ready to write a sourcemap
+		.pipe(stylus())                                     // turn the stylus into css
+		.pipe(combinemq())                                  // put all the media queries at the bottom
+		.pipe(sourcemap.write())                            // write the sourcemap
+		.pipe(autoprefix('last 2 versions'))                // autoprefix the css code
 	
-	return stream;
+	// make style.css
+	stream.pipe(clone())                                    // make a copy of the stream up to autoprefix
+		.pipe(beautify())                                   // make css really readable
+		.pipe(rename('style.css'))                          // make the filename style.css
+		.pipe(gulp.dest(paths.output))                      // save it into the dist folder
 	
-});
-
-
-
-
-
-gulp.task('scripts', ['clean:scripts'], function() {
+	// make style.min.css
+	stream.pipe(clone())                                    // make a copy of the stream up to autoprefix
+		.pipe(minifycss())                                  // minify it (removes the sourcemap)
+		.pipe(sourcemap.write())                            // write the sourcemap
+		.pipe(rename('style.min.css'))                      // make the filename style.min.css
+		.pipe(gulp.dest(paths.output))                      // save it into the dist folder
 	
-	var stream = gulp.src(['app/app.js', 'app/app.routes.js', 'app/**/*.js'])
+	return stream
+})
+
+gulp.task('watch', ['angular', 'css'], function() {
 	
-	.pipe(concat('app.min.js'))
+	gulp.watch(paths.angular.watch, ['angular'])
+	gulp.watch(paths.stylus.watch,  ['css'])
 	
-	.pipe(uglify({
-		mangle: false
-	}))
-	
-	.pipe(size())
-	
-	.pipe(gulp.dest('assets/dist'));
-	
-	return stream;
-	
-});
+})
 
-
-
-
-
-gulp.task('clean:styles', function(cb){
-	
-	del(['assets/dist/style.css'], cb);
-	
-});
-
-
-
-
-
-gulp.task('clean:scripts', function(cb){
-	
-	del(['assets/dist/app.min.js'], cb);
-	
-});
-
-
-
-
-
-// watch those tasks, and run them once to begin with
-gulp.task('watch', function() {
-
-	gulp.watch(['assets/css/*.styl', 'assets/css/**/*.styl'], ['styles']);
-	
-	gulp.watch(['app/**/*.js', 'app/*.js'], ['scripts']);
-
-});
-
-
-
-
-
-gulp.task('default', ['styles', 'scripts', 'watch'], function(){});
-
-gulp.task('clean', ['clean:styles', 'clean:scripts'], function(){})
+gulp.task('default', ['libs', 'angular', 'css'])

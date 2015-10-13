@@ -1,19 +1,15 @@
 angular.module('app.routes')
 
-.config(['$stateProvider', '$urlRouterProvider',
-	function($stateProvider, $urlRouterProvider) {
+.config(function($routeProvider) {
 
-		$urlRouterProvider.otherwise('/');
-
-		$stateProvider
-
-			.state('main', {
-				url: '/',
-				templateUrl: 'app/views/example.html',
-				controller: 'mainCtrl',
-				data: {
-					requireLogin: false
-				}
-			});
-	}
-]);
+	$routeProvider
+	
+		.when('/', {
+			controller: 'mainCtrl',
+			templateUrl: 'example.html'
+		})
+		
+		.otherwise({
+			redirectTo: '/'
+		})
+});
