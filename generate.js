@@ -20,7 +20,7 @@ var dirs = {
 }
 
 var tpl = {
-	controller: 'acontroller.js',
+	controller: 'controller.js',
 	directive:  'directive.js',
 	resource:   'resource.js',
 	service:    'service.js',
