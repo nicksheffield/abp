@@ -8,6 +8,11 @@
   },
   "author": "",
   "license": "ISC",
+  "dependencies": {
+    "commander": "^2.8.1",
+    "lodash": "^3.10.1",
+    "request": "^2.65.0"
+  },
   "devDependencies": {
     "gulp": "^3.9.0",
     "gulp-add-src": "^0.2.0",
