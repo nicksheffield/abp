@@ -6,7 +6,7 @@ angular.module('app.routes')
 	
 		.when('/', {
 			controller: 'mainCtrl',
-			templateUrl: 'example.html'
+			templateUrl: 'views/example.html'
 		})
 		
 		.otherwise({

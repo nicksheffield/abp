@@ -24,8 +24,8 @@ var paths = {
 	},
 	angular: {
 		files: ['app/*.js', 'app/**/*.js'],
-		watch: ['app/*.js', 'app/**/*.js', 'app/views/*.html'],
-		views: 'app/views/*.html'
+		watch: ['app/*.js', 'app/**/*.js', 'app/**/*.html'],
+		views: 'app/**/*.html'
 	},
 	libs: [
 		'bower_components/jquery/dist/jquery.min.js',
