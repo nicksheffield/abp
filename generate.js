@@ -4,8 +4,13 @@ var _ = require('lodash')
 var fs = require('fs')
 
 program
-	.version('0.0.1')
-	.usage('[options] <type> <name>')
+	.version('0.1.0')
+	.usage('<option> <name>')
+	.option('controller', 'Create a controller')
+	.option('directive', 'Create a directive')
+	.option('resource', 'Create a resource')
+	.option('service', 'Create a service')
+	.option('filter', 'Create a filter')
 	.parse(process.argv)
 
 _.templateSettings.interpolate = /<%=([\s\S]+?)%>/g;	
