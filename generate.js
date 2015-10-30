@@ -6,11 +6,6 @@ var fs = require('fs')
 program
 	.version('0.1.0')
 	.usage('<option> <name>')
-	.option('controller', 'Create a controller')
-	.option('directive', 'Create a directive')
-	.option('resource', 'Create a resource')
-	.option('service', 'Create a service')
-	.option('filter', 'Create a filter')
 	.parse(process.argv)
 
 _.templateSettings.interpolate = /<%=([\s\S]+?)%>/g;	
@@ -45,6 +40,8 @@ if(program.args.length >= 2) {
 		if(type == 'service')     f.push({ name: '$' + fileName,    template: tpl[type] });
 		if(type == 'filter')      f.push({ name: fileName,          template: tpl[type] });
 	})
+	
+	console.log(files)
 	
 	_.each(f, function(file) {
 		var data = {
