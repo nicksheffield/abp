@@ -39,18 +39,19 @@ var paths = {
 	output: 'assets/dist/'
 }
 
-var plumberOpts = {
-	errorHandler: notify.onError("Error: <%= error.message %>")
-}
-
-var tplCacheOpts = {
-	module: 'app.views'
+var settings = {
+	plumber: {
+		errorHandler: notify.onError("Error: <%= error.message %>")
+	},
+	tpl: {
+		module: 'app.views'
+	}
 }
 
 gulp.task('angular', function() {
 	var stream = gulp.src(paths.angular.views)              // grab all the html views
-		.pipe(plumber(plumberOpts))                         // stop any errors from breaking a watch
-		.pipe(templateCache('views.js', tplCacheOpts))      // make a template cache from them
+		.pipe(plumber(settings.plumber))                    // stop any errors from breaking a watch
+		.pipe(templateCache('views.js', settings.tpl))      // make a template cache from them
 		.pipe(addsrc(paths.angular.files))                  // add the rest of the angular app
 		.pipe(order(['app.js']))                            // make sure app.js is first
 		.pipe(annotate())                                   // make angular callbacks minifyable
@@ -73,7 +74,7 @@ gulp.task('libs', function() {
 gulp.task('stylus', function(){
 	// prepare css code
 	var stream = gulp.src(paths.stylus.main)                // grab our stylus file
-		.pipe(plumber(plumberOpts))                         // notify us if any errors appear
+		.pipe(plumber(settings.plumber))                    // notify us if any errors appear
 		.pipe(sourcemap.init())                             // get ready to write a sourcemap
 		.pipe(stylus())                                     // turn the stylus into css
 		.pipe(combinemq())                                  // put all the media queries at the bottom
