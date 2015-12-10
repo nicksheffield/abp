@@ -107,4 +107,4 @@ gulp.task('watch', ['angular', 'stylus'], function() {
 	})
 })
 
-gulp.task('default', ['libs', 'angular', 'css'])
+gulp.task('default', ['libs', 'angular', 'stylus'])
