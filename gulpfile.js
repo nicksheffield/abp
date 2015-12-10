@@ -53,14 +53,12 @@ gulp.task('angular', function() {
 		.pipe(templateCache('views.js', tplCacheOpts))      // make a template cache from them
 		.pipe(addsrc(paths.angular.files))                  // add the rest of the angular app
 		.pipe(order(['app.js']))                            // make sure app.js is first
-		.on('error', function(){})                          // suppress jscs error reporting
 		.pipe(annotate())                                   // make angular callbacks minifyable
 		.pipe(uglify())                                     // minify the code
 		.pipe(concat('app.min.js'))                         // merge them all into the same file
 		.pipe(gulp.dest(paths.output))                      // save it into the dist folder
 		
 	return stream
-	
 })
 
 gulp.task('libs', function() {
@@ -72,7 +70,7 @@ gulp.task('libs', function() {
 	return stream
 })
 
-gulp.task('css', function(){
+gulp.task('stylus', function(){
 	// prepare css code
 	var stream = gulp.src(paths.stylus.main)                // grab our stylus file
 		.pipe(plumber(plumberOpts))                         // notify us if any errors appear
@@ -98,16 +96,14 @@ gulp.task('css', function(){
 	return stream
 })
 
-gulp.task('watch', ['angular', 'css'], function() {
-	
+gulp.task('watch', ['angular', 'stylus'], function() {
 	watch(paths.angular.watch, function() {
 		gulp.start('angular')
 	})
 	
 	watch(paths.stylus.watch, function() {
-		gulp.start('css')
+		gulp.start('stylus')
 	})
-	
 })
 
 gulp.task('default', ['libs', 'angular', 'css'])
