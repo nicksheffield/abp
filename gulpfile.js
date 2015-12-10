@@ -2,19 +2,20 @@
 var gulp          = require('gulp')                         // the main guy
 var clone         = require('gulp-clone')                   // used to fork a stream
 var order         = require('gulp-order')                   // reorder files in stream
+var watch         = require('gulp-watch')                   // run tasks on file change
 var uglify        = require('gulp-uglify')                  // minify js
-var stylus        = require('gulp-stylus')                  // turn stylus code into css
 var rename        = require('gulp-rename')                  // rename file
 var concat        = require('gulp-concat')                  // merge files together
-var addsrc        = require('gulp-add-src')                 // mid-stream gulp.src()
+var stylus        = require('gulp-stylus')                  // turn stylus code into css
 var notify        = require('gulp-notify')                  // OS-level notifications
+var addsrc        = require('gulp-add-src')                 // mid-stream gulp.src()
 var plumber       = require('gulp-plumber')                 // handle errors without crashing
-var beautify      = require('gulp-cssbeautify')             // make files human readable
-var annotate      = require('gulp-ng-annotate')             // safely minify angular
 var sourcemap     = require('gulp-sourcemaps')              // write sourcemaps
 var minifycss     = require('gulp-minify-css')              // minify css code
-var combinemq     = require('gulp-combine-media-queries')   // move all media queries to the end
+var annotate      = require('gulp-ng-annotate')             // safely minify angular
+var beautify      = require('gulp-cssbeautify')             // make files human readable
 var autoprefix    = require('gulp-autoprefixer')            // prefix any css with low support
+var combinemq     = require('gulp-combine-media-queries')   // move all media queries to the end
 var templateCache = require('gulp-angular-templatecache')   // cache angular template files
 
 var paths = {
@@ -99,8 +100,13 @@ gulp.task('css', function(){
 
 gulp.task('watch', ['angular', 'css'], function() {
 	
-	gulp.watch(paths.angular.watch, ['angular'])
-	gulp.watch(paths.stylus.watch,  ['css'])
+	watch(paths.angular.watch, function() {
+		gulp.start('angular')
+	})
+	
+	watch(paths.stylus.watch, function() {
+		gulp.start('css')
+	})
 	
 })
 
