@@ -6,8 +6,8 @@ var watch         = require('gulp-watch')                   // run tasks on file
 var uglify        = require('gulp-uglify')                  // minify js
 var rename        = require('gulp-rename')                  // rename file
 var concat        = require('gulp-concat')                  // merge files together
-var stylus        = require('gulp-stylus')                  // turn stylus code into css
 var notify        = require('gulp-notify')                  // OS-level notifications
+var stylus        = require('gulp-stylus')                  // turn stylus code into css
 var addsrc        = require('gulp-add-src')                 // mid-stream gulp.src()
 var plumber       = require('gulp-plumber')                 // handle errors without crashing
 var sourcemap     = require('gulp-sourcemaps')              // write sourcemaps
@@ -15,8 +15,8 @@ var minifycss     = require('gulp-minify-css')              // minify css code
 var annotate      = require('gulp-ng-annotate')             // safely minify angular
 var beautify      = require('gulp-cssbeautify')             // make files human readable
 var autoprefix    = require('gulp-autoprefixer')            // prefix any css with low support
+var tplcache      = require('gulp-angular-templatecache')   // cache angular template files
 var combinemq     = require('gulp-combine-media-queries')   // move all media queries to the end
-var templateCache = require('gulp-angular-templatecache')   // cache angular template files
 
 var paths = {
 	stylus: {
@@ -51,7 +51,7 @@ var settings = {
 gulp.task('angular', function() {
 	var stream = gulp.src(paths.angular.views)              // grab all the html views
 		.pipe(plumber(settings.plumber))                    // stop any errors from breaking a watch
-		.pipe(templateCache('views.js', settings.tpl))      // make a template cache from them
+		.pipe(tplcache('views.js', settings.tpl))           // make a template cache from them
 		.pipe(addsrc(paths.angular.files))                  // add the rest of the angular app
 		.pipe(order(['app.js']))                            // make sure app.js is first
 		.pipe(annotate())                                   // make angular callbacks minifyable
