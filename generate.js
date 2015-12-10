@@ -6,6 +6,7 @@ var fs = require('fs')
 program
 	.version('0.1.0')
 	.usage('<option> <name>')
+	.option('<option>', 'Can be one of the following: controller, directive, resource, service, filter')
 	.parse(process.argv)
 
 _.templateSettings.interpolate = /<%=([\s\S]+?)%>/g;	

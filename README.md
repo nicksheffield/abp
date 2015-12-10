@@ -7,5 +7,21 @@
 To set up, run the following:
 
 ```
-npm install
+$ npm install
+```
+
+---
+
+## Generator
+
+```
+$ node generate --help
+
+  Usage: generate <option> <name>
+
+  Options:
+
+    -h, --help     output usage information
+    -V, --version  output the version number
+    <option>       Can be one of the following: controller, directive, resource, service, filter
 ```
