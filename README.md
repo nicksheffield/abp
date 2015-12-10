@@ -14,6 +14,13 @@ $ npm install
 
 ## Generator
 
+There is a generator for creating the various js files you will need, such as controllers or directives.
+
+eg.
+```
+$ node generate directive tooltip
+```
+
 ```
 $ node generate --help
 
