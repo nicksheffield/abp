@@ -1,0 +1,10 @@
+<div class="container">
+	<h1>Horse Clicker</h1>
+
+	<h2>Money: ${{ game.money | number: 2 }}</h2>
+	
+	<button class="btn btn-primary-outline" ng-click="game.run('foot')">Run a foot race (gain ${{ game.types.foot.baseGain }})</button>
+	
+	<p>Horses: {{ game.types.horse.count }}</p>
+	<button class="btn btn-primary-outline" ng-click="game.buy('horse')" ng-disabled="game.money < game.cost('horse')">Buy Horse (costs ${{ game.cost('horse') }}</button>
+</div>

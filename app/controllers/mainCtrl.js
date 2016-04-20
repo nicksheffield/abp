@@ -1,5 +1,7 @@
 angular.module('app.controllers')
 
-.controller('mainCtrl', function($scope) {
-	$scope.siteTitle = 'My Angular Site'
+.controller('mainCtrl', function($scope, $game) {
+	$scope.siteTitle = 'Horse Clicker'
+	
+	$scope.game = $game
 })
